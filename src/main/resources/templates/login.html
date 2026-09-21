@@ -103,6 +103,7 @@
             color: #0b1f3a;
             text-decoration: none;
             font-size: 14px;
+            cursor: pointer;
         }
 
         .forgot-password:hover {
@@ -137,6 +138,72 @@
             color: #166534;
         }
 
+        .recuperacion {
+            display: none;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .recuperacion h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            text-align: center;
+            color: #0b1f3a;
+        }
+
+        .recuperacion p {
+            text-align: center;
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .recuperacion-button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 9px;
+            background: #1e4f8a;
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .recuperacion-button:hover {
+            background: #173b6c;
+        }
+
+        .cancelar-button {
+            width: 100%;
+            margin-top: 8px;
+            padding: 10px;
+            border: none;
+            border-radius: 9px;
+            background: #e2e8f0;
+            color: #334155;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .contrasena-temporal {
+            margin-top: 15px;
+            padding: 12px;
+            background: #f1f5f9;
+            border-radius: 8px;
+            text-align: center;
+            display: none;
+        }
+
+        .contrasena-temporal strong {
+            display: block;
+            margin-top: 5px;
+            font-size: 18px;
+            color: #0b1f3a;
+            letter-spacing: 1px;
+        }
+
     </style>
 </head>
 
@@ -153,6 +220,9 @@
         <p class="login-subtitle">
             Sistema Administrativo
         </p>
+
+
+        <!-- LOGIN -->
 
         <form id="loginForm">
 
@@ -172,6 +242,7 @@
 
             </div>
 
+
             <div class="input-group">
 
                 <label for="contrasena">
@@ -188,24 +259,105 @@
 
             </div>
 
+
             <button
                     type="submit"
                     class="login-button">
+
                 Iniciar sesión
+
             </button>
+
 
             <div
                     id="mensaje"
                     class="mensaje">
             </div>
 
-            <a
-                    href="#"
-                    class="forgot-password">
-                ¿Olvidaste tu contraseña?
-            </a>
 
         </form>
+
+
+        <!-- RECUPERAR CONTRASEÑA -->
+
+        <a
+                href="#"
+                id="mostrarRecuperacion"
+                class="forgot-password">
+
+            ¿Olvidaste tu contraseña?
+
+        </a>
+
+
+        <div
+                id="recuperacion"
+                class="recuperacion">
+
+            <h3>
+                Recuperar contraseña
+            </h3>
+
+            <p>
+                Ingresa tu correo electrónico
+                para generar una nueva contraseña temporal.
+            </p>
+
+
+            <input
+                    type="email"
+                    id="correoRecuperacion"
+                    placeholder="Ingrese su correo"
+                    style="
+                        width: 100%;
+                        padding: 12px;
+                        border: 1px solid #cbd5e1;
+                        border-radius: 9px;
+                        font-size: 14px;
+                        margin-bottom: 10px;
+                    "
+            >
+
+
+            <button
+                    type="button"
+                    id="btnRecuperar"
+                    class="recuperacion-button">
+
+                Recuperar contraseña
+
+            </button>
+
+
+            <button
+                    type="button"
+                    id="btnCancelarRecuperacion"
+                    class="cancelar-button">
+
+                Cancelar
+
+            </button>
+
+
+            <div
+                    id="mensajeRecuperacion"
+                    class="mensaje">
+            </div>
+
+
+            <div
+                    id="contrasenaTemporal"
+                    class="contrasena-temporal">
+
+                Nueva contraseña temporal:
+
+                <strong id="textoContrasena">
+                </strong>
+
+            </div>
+
+        </div>
+
 
         <p class="footer-text">
             © 2026 SOFTBECX
@@ -215,93 +367,359 @@
 
 </div>
 
+
 <script>
 
-    const loginForm = document.getElementById("loginForm");
+    // ============================
+    // LOGIN
+    // ============================
 
-    const mensaje = document.getElementById("mensaje");
+    const loginForm =
+        document.getElementById("loginForm");
 
-    loginForm.addEventListener("submit", async function(event) {
 
-        event.preventDefault();
+    const mensaje =
+        document.getElementById("mensaje");
 
-        const correo =
-            document.getElementById("correo").value;
 
-        const contrasena =
-            document.getElementById("contrasena").value;
+    loginForm.addEventListener(
+        "submit",
+        async function(event) {
 
-        mensaje.className = "mensaje";
-        mensaje.textContent = "";
+            event.preventDefault();
 
-        try {
 
-            const respuesta = await fetch("/api/login", {
+            const correo =
+                document.getElementById("correo")
+                    .value;
 
-                method: "POST",
 
-                headers: {
-                    "Content-Type": "application/json"
-                },
+            const contrasena =
+                document.getElementById("contrasena")
+                    .value;
 
-                body: JSON.stringify({
-                    correo: correo,
-                    contrasena: contrasena
-                })
 
-            });
+            mensaje.className =
+                "mensaje";
 
-            const datos = await respuesta.json();
 
-            if (respuesta.ok) {
+            mensaje.textContent =
+                "";
 
-                localStorage.setItem(
-                    "token",
-                    datos.token
-                );
 
-                localStorage.setItem(
-                    "usuario",
-                    JSON.stringify(datos)
-                );
+            try {
 
-                mensaje.className =
-                    "mensaje exito";
+                const respuesta =
+                    await fetch(
+                        "/api/login",
+                        {
 
-                mensaje.textContent =
-                    "Inicio de sesión exitoso";
+                            method: "POST",
 
-                setTimeout(function() {
+                            headers: {
 
-                    window.location.href =
-                        "/dashboard";
+                                "Content-Type":
+                                    "application/json"
 
-                }, 1000);
+                            },
 
-            } else {
+                            body:
+                                JSON.stringify({
+
+                                    correo:
+                                    correo,
+
+                                    contrasena:
+                                    contrasena
+
+                                })
+
+                        }
+                    );
+
+
+                const datos =
+                    await respuesta.json();
+
+
+                if (respuesta.ok) {
+
+                    localStorage.setItem(
+                        "token",
+                        datos.token
+                    );
+
+
+                    localStorage.setItem(
+                        "usuario",
+                        JSON.stringify(datos)
+                    );
+
+
+                    mensaje.className =
+                        "mensaje exito";
+
+
+                    mensaje.textContent =
+                        "Inicio de sesión exitoso";
+
+
+                    setTimeout(
+                        function() {
+
+                            window.location.href =
+                                "/dashboard";
+
+                        },
+                        1000
+                    );
+
+
+                } else {
+
+                    mensaje.className =
+                        "mensaje error";
+
+
+                    mensaje.textContent =
+                        datos.mensaje ||
+                        "Correo o contraseña incorrectos";
+
+                }
+
+
+            } catch (error) {
 
                 mensaje.className =
                     "mensaje error";
 
+
                 mensaje.textContent =
-                    datos.mensaje ||
-                    "Correo o contraseña incorrectos";
+                    "No se pudo conectar con el servidor";
 
             }
 
-        } catch (error) {
+        }
+    );
 
-            mensaje.className =
-                "mensaje error";
 
-            mensaje.textContent =
-                "No se pudo conectar con el servidor";
+    // ============================
+    // MOSTRAR RECUPERACIÓN
+    // ============================
+
+    const mostrarRecuperacion =
+        document.getElementById(
+            "mostrarRecuperacion"
+        );
+
+
+    const recuperacion =
+        document.getElementById(
+            "recuperacion"
+        );
+
+
+    mostrarRecuperacion.addEventListener(
+        "click",
+        function(event) {
+
+            event.preventDefault();
+
+
+            recuperacion.style.display =
+                "block";
+
+
+            document.getElementById(
+                "correoRecuperacion"
+            ).focus();
 
         }
+    );
 
-    });
+
+    // ============================
+    // CANCELAR RECUPERACIÓN
+    // ============================
+
+    document.getElementById(
+        "btnCancelarRecuperacion"
+    ).addEventListener(
+        "click",
+        function() {
+
+            recuperacion.style.display =
+                "none";
+
+
+            document.getElementById(
+                "correoRecuperacion"
+            ).value = "";
+
+
+            document.getElementById(
+                "mensajeRecuperacion"
+            ).className =
+                "mensaje";
+
+
+            document.getElementById(
+                "mensajeRecuperacion"
+            ).textContent = "";
+
+
+            document.getElementById(
+                "contrasenaTemporal"
+            ).style.display =
+                "none";
+
+        }
+    );
+
+
+    // ============================
+    // RECUPERAR CONTRASEÑA
+    // ============================
+
+    document.getElementById(
+        "btnRecuperar"
+    ).addEventListener(
+        "click",
+        async function() {
+
+            const correo =
+                document.getElementById(
+                    "correoRecuperacion"
+                ).value;
+
+
+            const mensajeRecuperacion =
+                document.getElementById(
+                    "mensajeRecuperacion"
+                );
+
+
+            const contrasenaTemporal =
+                document.getElementById(
+                    "contrasenaTemporal"
+                );
+
+
+            const textoContrasena =
+                document.getElementById(
+                    "textoContrasena"
+                );
+
+
+            if (!correo) {
+
+                mensajeRecuperacion.className =
+                    "mensaje error";
+
+
+                mensajeRecuperacion.textContent =
+                    "Ingrese su correo electrónico";
+
+
+                return;
+
+            }
+
+
+            mensajeRecuperacion.className =
+                "mensaje";
+
+
+            mensajeRecuperacion.textContent =
+                "";
+
+
+            contrasenaTemporal.style.display =
+                "none";
+
+
+            try {
+
+                const respuesta =
+                    await fetch(
+                        "/api/recuperar-contrasena",
+                        {
+
+                            method: "POST",
+
+                            headers: {
+
+                                "Content-Type":
+                                    "application/json"
+
+                            },
+
+                            body:
+                                JSON.stringify({
+
+                                    correo:
+                                    correo
+
+                                })
+
+                        }
+                    );
+
+
+                const datos =
+                    await respuesta.json();
+
+
+                if (respuesta.ok) {
+
+                    mensajeRecuperacion.className =
+                        "mensaje exito";
+
+
+                    mensajeRecuperacion.textContent =
+                        datos.mensaje;
+
+
+                    textoContrasena.textContent =
+                        datos.nuevaContrasena;
+
+
+                    contrasenaTemporal.style.display =
+                        "block";
+
+
+                } else {
+
+                    mensajeRecuperacion.className =
+                        "mensaje error";
+
+
+                    mensajeRecuperacion.textContent =
+                        datos.mensaje ||
+                        "No se pudo recuperar la contraseña";
+
+                }
+
+
+            } catch (error) {
+
+                console.error(error);
+
+
+                mensajeRecuperacion.className =
+                    "mensaje error";
+
+
+                mensajeRecuperacion.textContent =
+                    "No se pudo conectar con el servidor";
+
+            }
+
+        }
+    );
 
 </script>
 
 </body>
 </html>
+```
