@@ -35,6 +35,7 @@ public class SecurityConfig {
                         .requestMatchers("/dashboard").permitAll()
                         .requestMatchers("/productos").permitAll()
                         .requestMatchers("/clientes").permitAll()
+                        .requestMatchers("/pedidos").permitAll()
 
                         // APIs públicas
                         .requestMatchers("/api/login").permitAll()

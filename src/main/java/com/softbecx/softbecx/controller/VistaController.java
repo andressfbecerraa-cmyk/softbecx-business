@@ -25,4 +25,9 @@ public class VistaController {
     public String mostrarClientes() {
         return "clientes";
     }
+
+    @GetMapping("/pedidos")
+    public String mostrarPedidos() {
+        return "pedidos";
+    }
 }
