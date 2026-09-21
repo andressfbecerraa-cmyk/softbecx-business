@@ -29,9 +29,19 @@ public class SecurityConfig {
                 )
 
                 .authorizeHttpRequests(auth -> auth
+
+                        // Páginas visuales
+                        .requestMatchers("/login").permitAll()
+                        .requestMatchers("/dashboard").permitAll()
+                        .requestMatchers("/productos").permitAll()
+                        .requestMatchers("/clientes").permitAll()
+
+                        // APIs públicas
                         .requestMatchers("/api/login").permitAll()
                         .requestMatchers("/api/logout").permitAll()
                         .requestMatchers("/api/recuperar-contrasena").permitAll()
+
+                        // Todo lo demás requiere autenticación
                         .anyRequest().authenticated()
                 )
 

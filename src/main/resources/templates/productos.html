@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>SOFTBECX - Productos</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+        }
+
+        /* MENÚ LATERAL */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: #0b1f3a;
+            color: white;
+            padding: 25px 15px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo h1 {
+            margin: 0;
+            font-size: 28px;
+            letter-spacing: 2px;
+        }
+
+        .logo p {
+            margin: 5px 0 0;
+            color: #cbd5e1;
+            font-size: 13px;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .menu a {
+            padding: 13px 15px;
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+        }
+
+        .menu a:hover,
+        .menu a.active {
+            background: #1e3a5f;
+        }
+
+        .logout {
+            margin-top: 30px;
+            background: #7f1d1d;
+        }
+
+        .logout:hover {
+            background: #991b1b !important;
+        }
+
+        /* CONTENIDO */
+
+        .main {
+            margin-left: 250px;
+            padding: 30px;
+        }
+
+        .topbar {
+            background: white;
+            padding: 20px 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .topbar h2 {
+            margin: 0;
+            color: #0b1f3a;
+        }
+
+        .topbar p {
+            margin: 7px 0 0;
+            color: #64748b;
+        }
+
+        /* BOTÓN NUEVO */
+
+        .btn-nuevo {
+            padding: 12px 18px;
+            border: none;
+            border-radius: 8px;
+            background: #0b1f3a;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-nuevo:hover {
+            background: #07152a;
+        }
+
+        /* FORMULARIO */
+
+        .formulario-container {
+            display: none;
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .formulario-container h3 {
+            margin-top: 0;
+            color: #0b1f3a;
+        }
+
+        .formulario {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .campo {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .campo-completo {
+            grid-column: 1 / -1;
+        }
+
+        .campo label {
+            margin-bottom: 7px;
+            font-weight: bold;
+            color: #334155;
+            font-size: 14px;
+        }
+
+        .campo input,
+        .campo textarea,
+        .campo select {
+            padding: 11px;
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+        }
+
+        .campo textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .botones-formulario {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .btn-guardar {
+            padding: 11px 18px;
+            border: none;
+            border-radius: 7px;
+            background: #0b1f3a;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-cancelar {
+            padding: 11px 18px;
+            border: none;
+            border-radius: 7px;
+            background: #e2e8f0;
+            color: #334155;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .mensaje-formulario {
+            grid-column: 1 / -1;
+            padding: 10px;
+            border-radius: 7px;
+            display: none;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .mensaje-formulario.exito {
+            display: block;
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .mensaje-formulario.error {
+            display: block;
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        /* TABLA */
+
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #0b1f3a;
+            color: white;
+        }
+
+        th {
+            padding: 14px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 14px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #334155;
+            font-size: 14px;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        .estado {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .estado.activo {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .estado.inactivo {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .sin-productos {
+            text-align: center;
+            padding: 40px;
+            color: #64748b;
+        }
+
+        .acciones {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-editar {
+            padding: 7px 12px;
+            border: none;
+            border-radius: 6px;
+            background: #e2e8f0;
+            color: #0b1f3a;
+            cursor: pointer;
+        }
+
+        .btn-eliminar {
+            padding: 7px 12px;
+            border: none;
+            border-radius: 6px;
+            background: #fee2e2;
+            color: #b91c1c;
+            cursor: pointer;
+        }
+
+        @media (max-width: 900px) {
+
+            .sidebar {
+                position: static;
+                width: 100%;
+                height: auto;
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .formulario {
+                grid-template-columns: 1fr;
+            }
+
+            .campo-completo,
+            .botones-formulario,
+            .mensaje-formulario {
+                grid-column: 1;
+            }
+
+            .topbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .table-container {
+                overflow-x: auto;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<!-- MENÚ LATERAL -->
+
+<div class="sidebar">
+
+    <div class="logo">
+
+        <h1>SOFTBECX</h1>
+
+        <p>Sistema Administrativo</p>
+
+    </div>
+
+    <div class="menu">
+
+        <a href="/dashboard">
+            🏠 Dashboard
+        </a>
+
+        <a href="/productos" class="active">
+            📦 Productos / Servicios
+        </a>
+
+        <a href="#">
+            👥 Clientes
+        </a>
+
+        <a href="#">
+            🛒 Pedidos
+        </a>
+
+        <a href="#">
+            👤 Usuarios
+        </a>
+
+        <a href="#">
+            🌐 Página Web
+        </a>
+
+        <a href="#">
+            ⚙️ Configuración
+        </a>
+
+        <a href="/login" class="logout">
+            🚪 Cerrar sesión
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- CONTENIDO PRINCIPAL -->
+
+<div class="main">
+
+    <div class="topbar">
+
+        <div>
+
+            <h2>
+                Productos / Servicios
+            </h2>
+
+            <p>
+                Administra los productos y servicios de SOFTBECX
+            </p>
+
+        </div>
+
+        <button
+                class="btn-nuevo"
+                onclick="nuevoProducto()">
+
+            + Nuevo producto
+
+        </button>
+
+    </div>
+
+
+    <!-- FORMULARIO -->
+
+    <div
+            id="formularioContainer"
+            class="formulario-container">
+
+        <h3 id="tituloFormulario">
+            Nuevo producto
+        </h3>
+
+        <form
+                id="productoForm"
+                class="formulario">
+
+            <div class="campo">
+
+                <label for="nombre">
+                    Nombre
+                </label>
+
+                <input
+                        type="text"
+                        id="nombre"
+                        required
+                        placeholder="Ej: Laptop Lenovo">
+
+            </div>
+
+
+            <div class="campo">
+
+                <label for="precio">
+                    Precio
+                </label>
+
+                <input
+                        type="number"
+                        id="precio"
+                        step="0.01"
+                        min="0"
+                        required
+                        placeholder="Ej: 2500000">
+
+            </div>
+
+
+            <div class="campo campo-completo">
+
+                <label for="descripcion">
+                    Descripción
+                </label>
+
+                <textarea
+                        id="descripcion"
+                        required
+                        placeholder="Describe el producto o servicio"></textarea>
+
+            </div>
+
+
+            <div class="campo">
+
+                <label for="imagen">
+                    Imagen
+                </label>
+
+                <input
+                        type="text"
+                        id="imagen"
+                        placeholder="URL de la imagen">
+
+            </div>
+
+
+            <div class="campo">
+
+                <label for="categoria">
+                    Categoría
+                </label>
+
+                <input
+                        type="text"
+                        id="categoria"
+                        placeholder="Ej: Tecnología">
+
+            </div>
+
+
+            <div class="campo">
+
+                <label for="activo">
+                    Estado
+                </label>
+
+                <select id="activo">
+
+                    <option value="true">
+                        Activo
+                    </option>
+
+                    <option value="false">
+                        Inactivo
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div
+                    id="mensajeFormulario"
+                    class="mensaje-formulario">
+            </div>
+
+
+            <div class="botones-formulario">
+
+                <button
+                        type="submit"
+                        class="btn-guardar">
+
+                    Guardar producto
+
+                </button>
+
+                <button
+                        type="button"
+                        class="btn-cancelar"
+                        onclick="ocultarFormulario()">
+
+                    Cancelar
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- TABLA -->
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+            <tr>
+
+                <th>ID</th>
+
+                <th>Nombre</th>
+
+                <th>Descripción</th>
+
+                <th>Precio</th>
+
+                <th>Categoría</th>
+
+                <th>Estado</th>
+
+                <th>Acciones</th>
+
+            </tr>
+
+            </thead>
+
+            <tbody id="tablaProductos">
+
+            </tbody>
+
+        </table>
+
+        <div
+                id="sinProductos"
+                class="sin-productos">
+
+            Cargando productos...
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    let productoEditandoId = null;
+
+
+    async function cargarProductos() {
+
+        const token =
+            localStorage.getItem("token");
+
+        try {
+
+            const respuesta =
+                await fetch("/api/productos", {
+
+                    method: "GET",
+
+                    headers: {
+                        "Authorization":
+                            "Bearer " + token
+                    }
+
+                });
+
+            if (!respuesta.ok) {
+
+                document.getElementById(
+                    "sinProductos"
+                ).textContent =
+                    "No se pudieron cargar los productos.";
+
+                return;
+            }
+
+            const productos =
+                await respuesta.json();
+
+            const tabla =
+                document.getElementById(
+                    "tablaProductos"
+                );
+
+            const mensaje =
+                document.getElementById(
+                    "sinProductos"
+                );
+
+            tabla.innerHTML = "";
+
+            if (productos.length === 0) {
+
+                mensaje.style.display = "block";
+
+                mensaje.textContent =
+                    "No hay productos registrados.";
+
+                return;
+            }
+
+            mensaje.style.display = "none";
+
+            productos.forEach(function(producto) {
+
+                const fila =
+                    document.createElement("tr");
+
+                fila.innerHTML = `
+
+                    <td>${producto.id}</td>
+
+                    <td>${producto.nombre}</td>
+
+                    <td>${producto.descripcion}</td>
+
+                    <td>$${producto.precio}</td>
+
+                    <td>${producto.categoria || "-"}</td>
+
+                    <td>
+
+                        <span class="estado ${
+                    producto.activo
+                        ? "activo"
+                        : "inactivo"
+                }">
+
+                            ${
+                    producto.activo
+                        ? "Activo"
+                        : "Inactivo"
+                }
+
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <div class="acciones">
+
+                            <button
+                                class="btn-editar"
+                                onclick="editarProducto(${producto.id})">
+
+                                Editar
+
+                            </button>
+
+                            <button
+                                class="btn-eliminar"
+                                onclick="eliminarProducto(${producto.id})">
+
+                                Eliminar
+
+                            </button>
+
+                        </div>
+
+                    </td>
+
+                `;
+
+                tabla.appendChild(fila);
+
+            });
+
+        } catch (error) {
+
+            document.getElementById(
+                "sinProductos"
+            ).textContent =
+                "Error al conectar con el servidor.";
+
+        }
+
+    }
+
+
+    function nuevoProducto() {
+
+        productoEditandoId = null;
+
+        document.getElementById(
+            "tituloFormulario"
+        ).textContent =
+            "Nuevo producto";
+
+        document.getElementById(
+            "productoForm"
+        ).reset();
+
+        limpiarMensaje();
+
+        document.getElementById(
+            "formularioContainer"
+        ).style.display =
+            "block";
+
+        document.getElementById(
+            "nombre"
+        ).focus();
+
+    }
+
+
+    async function editarProducto(id) {
+
+        const token =
+            localStorage.getItem("token");
+
+        try {
+
+            const respuesta =
+                await fetch(
+                    "/api/productos/" + id,
+                    {
+                        method: "GET",
+
+                        headers: {
+                            "Authorization":
+                                "Bearer " + token
+                        }
+                    }
+                );
+
+            if (!respuesta.ok) {
+
+                alert(
+                    "No se pudo obtener el producto."
+                );
+
+                return;
+            }
+
+            const producto =
+                await respuesta.json();
+
+            productoEditandoId = id;
+
+            document.getElementById(
+                "tituloFormulario"
+            ).textContent =
+                "Editar producto";
+
+            document.getElementById(
+                "nombre"
+            ).value =
+                producto.nombre;
+
+            document.getElementById(
+                "descripcion"
+            ).value =
+                producto.descripcion;
+
+            document.getElementById(
+                "precio"
+            ).value =
+                producto.precio;
+
+            document.getElementById(
+                "imagen"
+            ).value =
+                producto.imagen || "";
+
+            document.getElementById(
+                "categoria"
+            ).value =
+                producto.categoria || "";
+
+            document.getElementById(
+                "activo"
+            ).value =
+                producto.activo
+                    ? "true"
+                    : "false";
+
+            limpiarMensaje();
+
+            document.getElementById(
+                "formularioContainer"
+            ).style.display =
+                "block";
+
+            document.getElementById(
+                "nombre"
+            ).focus();
+
+        } catch (error) {
+
+            alert(
+                "Error al conectar con el servidor."
+            );
+
+        }
+
+    }
+
+
+    function ocultarFormulario() {
+
+        productoEditandoId = null;
+
+        document.getElementById(
+            "formularioContainer"
+        ).style.display =
+            "none";
+
+        document.getElementById(
+            "productoForm"
+        ).reset();
+
+        limpiarMensaje();
+
+    }
+
+
+    function limpiarMensaje() {
+
+        const mensaje =
+            document.getElementById(
+                "mensajeFormulario"
+            );
+
+        mensaje.className =
+            "mensaje-formulario";
+
+        mensaje.textContent =
+            "";
+
+    }
+
+
+    document.getElementById(
+        "productoForm"
+    ).addEventListener(
+        "submit",
+        async function(event) {
+
+            event.preventDefault();
+
+            const token =
+                localStorage.getItem("token");
+
+            const producto = {
+
+                nombre:
+                document.getElementById(
+                    "nombre"
+                ).value,
+
+                descripcion:
+                document.getElementById(
+                    "descripcion"
+                ).value,
+
+                precio:
+                    parseFloat(
+                        document.getElementById(
+                            "precio"
+                        ).value
+                    ),
+
+                imagen:
+                document.getElementById(
+                    "imagen"
+                ).value,
+
+                categoria:
+                document.getElementById(
+                    "categoria"
+                ).value,
+
+                activo:
+                    document.getElementById(
+                        "activo"
+                    ).value === "true"
+
+            };
+
+            const mensaje =
+                document.getElementById(
+                    "mensajeFormulario"
+                );
+
+            try {
+
+                let respuesta;
+
+                if (productoEditandoId === null) {
+
+                    respuesta =
+                        await fetch(
+                            "/api/productos",
+                            {
+                                method: "POST",
+
+                                headers: {
+
+                                    "Content-Type":
+                                        "application/json",
+
+                                    "Authorization":
+                                        "Bearer " + token
+
+                                },
+
+                                body:
+                                    JSON.stringify(
+                                        producto
+                                    )
+                            }
+                        );
+
+                } else {
+
+                    respuesta =
+                        await fetch(
+                            "/api/productos/"
+                            + productoEditandoId,
+                            {
+                                method: "PUT",
+
+                                headers: {
+
+                                    "Content-Type":
+                                        "application/json",
+
+                                    "Authorization":
+                                        "Bearer " + token
+
+                                },
+
+                                body:
+                                    JSON.stringify(
+                                        producto
+                                    )
+                            }
+                        );
+
+                }
+
+                const datos =
+                    await respuesta.json();
+
+                if (respuesta.ok) {
+
+                    mensaje.className =
+                        "mensaje-formulario exito";
+
+                    mensaje.textContent =
+                        productoEditandoId === null
+                            ? "Producto creado correctamente."
+                            : "Producto actualizado correctamente.";
+
+                    cargarProductos();
+
+                    setTimeout(function() {
+
+                        ocultarFormulario();
+
+                    }, 1000);
+
+                } else {
+
+                    mensaje.className =
+                        "mensaje-formulario error";
+
+                    mensaje.textContent =
+                        datos.mensaje ||
+                        "No se pudo guardar el producto.";
+
+                }
+
+            } catch (error) {
+
+                mensaje.className =
+                    "mensaje-formulario error";
+
+                mensaje.textContent =
+                    "Error al conectar con el servidor.";
+
+            }
+
+        }
+    );
+
+
+    async function eliminarProducto(id) {
+
+        const confirmar =
+            confirm(
+                "¿Estás seguro de que deseas eliminar este producto?"
+            );
+
+        if (!confirmar) {
+            return;
+        }
+
+        const token =
+            localStorage.getItem("token");
+
+        try {
+
+            const respuesta =
+                await fetch(
+                    "/api/productos/" + id,
+                    {
+                        method: "DELETE",
+
+                        headers: {
+                            "Authorization":
+                                "Bearer " + token
+                        }
+                    }
+                );
+
+            if (respuesta.ok) {
+
+                alert(
+                    "Producto eliminado correctamente."
+                );
+
+                cargarProductos();
+
+            } else {
+
+                alert(
+                    "No se pudo eliminar el producto."
+                );
+
+            }
+
+        } catch (error) {
+
+            alert(
+                "Error al conectar con el servidor."
+            );
+
+        }
+
+    }
+
+
+    cargarProductos();
+
+</script>
+
+</body>
+
+</html>

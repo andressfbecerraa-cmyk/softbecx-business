@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>SOFTBECX - Clientes</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+        }
+
+        /* MENÚ LATERAL */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: #0b1f3a;
+            color: white;
+            padding: 25px 15px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo h1 {
+            margin: 0;
+            font-size: 28px;
+            letter-spacing: 2px;
+        }
+
+        .logo p {
+            margin: 5px 0 0;
+            color: #cbd5e1;
+            font-size: 13px;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .menu a {
+            padding: 13px 15px;
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+        }
+
+        .menu a:hover,
+        .menu a.active {
+            background: #1e3a5f;
+        }
+
+        .logout {
+            margin-top: 30px;
+            background: #7f1d1d;
+        }
+
+        .logout:hover {
+            background: #991b1b !important;
+        }
+
+        /* CONTENIDO */
+
+        .main {
+            margin-left: 250px;
+            padding: 30px;
+        }
+
+        .topbar {
+            background: white;
+            padding: 20px 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .topbar h2 {
+            margin: 0;
+            color: #0b1f3a;
+        }
+
+        .topbar p {
+            margin: 7px 0 0;
+            color: #64748b;
+        }
+
+        /* BOTÓN NUEVO */
+
+        .btn-nuevo {
+            padding: 12px 18px;
+            border: none;
+            border-radius: 8px;
+            background: #0b1f3a;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-nuevo:hover {
+            background: #07152a;
+        }
+
+        /* FORMULARIO */
+
+        .formulario-container {
+            display: none;
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .formulario-container h3 {
+            margin-top: 0;
+            color: #0b1f3a;
+        }
+
+        .formulario {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .campo {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .campo-completo {
+            grid-column: 1 / -1;
+        }
+
+        .campo label {
+            margin-bottom: 7px;
+            font-weight: bold;
+            color: #334155;
+            font-size: 14px;
+        }
+
+        .campo input {
+            padding: 11px;
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            font-size: 14px;
+        }
+
+        .botones-formulario {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .btn-guardar {
+            padding: 11px 18px;
+            border: none;
+            border-radius: 7px;
+            background: #0b1f3a;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-cancelar {
+            padding: 11px 18px;
+            border: none;
+            border-radius: 7px;
+            background: #e2e8f0;
+            color: #334155;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .mensaje-formulario {
+            grid-column: 1 / -1;
+            padding: 10px;
+            border-radius: 7px;
+            display: none;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .mensaje-formulario.exito {
+            display: block;
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .mensaje-formulario.error {
+            display: block;
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        /* TABLA */
+
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #0b1f3a;
+            color: white;
+        }
+
+        th {
+            padding: 14px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 14px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #334155;
+            font-size: 14px;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        .sin-clientes {
+            text-align: center;
+            padding: 40px;
+            color: #64748b;
+        }
+
+        .acciones {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-editar {
+            padding: 7px 12px;
+            border: none;
+            border-radius: 6px;
+            background: #e2e8f0;
+            color: #0b1f3a;
+            cursor: pointer;
+        }
+
+        .btn-eliminar {
+            padding: 7px 12px;
+            border: none;
+            border-radius: 6px;
+            background: #fee2e2;
+            color: #b91c1c;
+            cursor: pointer;
+        }
+
+        @media (max-width: 900px) {
+
+            .sidebar {
+                position: static;
+                width: 100%;
+                height: auto;
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .formulario {
+                grid-template-columns: 1fr;
+            }
+
+            .campo-completo,
+            .botones-formulario,
+            .mensaje-formulario {
+                grid-column: 1;
+            }
+
+            .topbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .table-container {
+                overflow-x: auto;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<!-- MENÚ LATERAL -->
+
+<div class="sidebar">
+
+    <div class="logo">
+
+        <h1>SOFTBECX</h1>
+
+        <p>Sistema Administrativo</p>
+
+    </div>
+
+    <div class="menu">
+
+        <a href="/dashboard">
+            🏠 Dashboard
+        </a>
+
+        <a href="/productos">
+            📦 Productos / Servicios
+        </a>
+
+        <a href="/clientes" class="active">
+            👥 Clientes
+        </a>
+
+        <a href="#">
+            🛒 Pedidos
+        </a>
+
+        <a href="#">
+            👤 Usuarios
+        </a>
+
+        <a href="#">
+            🌐 Página Web
+        </a>
+
+        <a href="#">
+            ⚙️ Configuración
+        </a>
+
+        <a href="/login" class="logout">
+            🚪 Cerrar sesión
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- CONTENIDO PRINCIPAL -->
+
+<div class="main">
+
+    <div class="topbar">
+
+        <div>
+
+            <h2>
+                Clientes
+            </h2>
+
+            <p>
+                Administra los clientes de SOFTBECX
+            </p>
+
+        </div>
+
+        <button
+                class="btn-nuevo"
+                onclick="nuevoCliente()">
+
+            + Nuevo cliente
+
+        </button>
+
+    </div>
+
+
+    <!-- FORMULARIO -->
+
+    <div
+            id="formularioContainer"
+            class="formulario-container">
+
+        <h3 id="tituloFormulario">
+            Nuevo cliente
+        </h3>
+
+        <form
+                id="clienteForm"
+                class="formulario">
+
+            <div class="campo">
+
+                <label for="nombre">
+                    Nombre completo
+                </label>
+
+                <input
+                        type="text"
+                        id="nombre"
+                        required
+                        placeholder="Ej: Carlos Rodríguez">
+
+            </div>
+
+
+            <div class="campo">
+
+                <label for="documento">
+                    Documento
+                </label>
+
+                <input
+                        type="text"
+                        id="documento"
+                        required
+                        placeholder="Ej: 1098765432">
+
+            </div>
+
+
+            <div class="campo">
+
+                <label for="telefono">
+                    Teléfono
+                </label>
+
+                <input
+                        type="text"
+                        id="telefono"
+                        placeholder="Ej: 3001234567">
+
+            </div>
+
+
+            <div class="campo">
+
+                <label for="correo">
+                    Correo electrónico
+                </label>
+
+                <input
+                        type="email"
+                        id="correo"
+                        placeholder="Ej: cliente@email.com">
+
+            </div>
+
+
+            <div class="campo campo-completo">
+
+                <label for="direccion">
+                    Dirección
+                </label>
+
+                <input
+                        type="text"
+                        id="direccion"
+                        placeholder="Ej: Calle 45 # 20-30">
+
+            </div>
+
+
+            <div
+                    id="mensajeFormulario"
+                    class="mensaje-formulario">
+            </div>
+
+
+            <div class="botones-formulario">
+
+                <button
+                        type="submit"
+                        class="btn-guardar">
+
+                    Guardar cliente
+
+                </button>
+
+                <button
+                        type="button"
+                        class="btn-cancelar"
+                        onclick="ocultarFormulario()">
+
+                    Cancelar
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- TABLA -->
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+            <tr>
+
+                <th>ID</th>
+
+                <th>Nombre</th>
+
+                <th>Documento</th>
+
+                <th>Teléfono</th>
+
+                <th>Correo</th>
+
+                <th>Dirección</th>
+
+                <th>Acciones</th>
+
+            </tr>
+
+            </thead>
+
+            <tbody id="tablaClientes">
+
+            </tbody>
+
+        </table>
+
+        <div
+                id="sinClientes"
+                class="sin-clientes">
+
+            Cargando clientes...
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    let clienteEditandoId = null;
+
+
+    async function cargarClientes() {
+
+        const token =
+            localStorage.getItem("token");
+
+        try {
+
+            const respuesta =
+                await fetch("/api/clientes", {
+
+                    method: "GET",
+
+                    headers: {
+                        "Authorization":
+                            "Bearer " + token
+                    }
+
+                });
+
+            if (!respuesta.ok) {
+
+                document.getElementById(
+                    "sinClientes"
+                ).textContent =
+                    "No se pudieron cargar los clientes.";
+
+                return;
+            }
+
+            const clientes =
+                await respuesta.json();
+
+            const tabla =
+                document.getElementById(
+                    "tablaClientes"
+                );
+
+            const mensaje =
+                document.getElementById(
+                    "sinClientes"
+                );
+
+            tabla.innerHTML = "";
+
+            if (clientes.length === 0) {
+
+                mensaje.style.display = "block";
+
+                mensaje.textContent =
+                    "No hay clientes registrados.";
+
+                return;
+            }
+
+            mensaje.style.display = "none";
+
+            clientes.forEach(function(cliente) {
+
+                const fila =
+                    document.createElement("tr");
+
+                fila.innerHTML = `
+
+                    <td>${cliente.id}</td>
+
+                    <td>${cliente.nombre}</td>
+
+                    <td>${cliente.documento}</td>
+
+                    <td>${cliente.telefono || "-"}</td>
+
+                    <td>${cliente.correo || "-"}</td>
+
+                    <td>${cliente.direccion || "-"}</td>
+
+                    <td>
+
+                        <div class="acciones">
+
+                            <button
+                                class="btn-editar"
+                                onclick="editarCliente(${cliente.id})">
+
+                                Editar
+
+                            </button>
+
+                            <button
+                                class="btn-eliminar"
+                                onclick="eliminarCliente(${cliente.id})">
+
+                                Eliminar
+
+                            </button>
+
+                        </div>
+
+                    </td>
+
+                `;
+
+                tabla.appendChild(fila);
+
+            });
+
+        } catch (error) {
+
+            document.getElementById(
+                "sinClientes"
+            ).textContent =
+                "Error al conectar con el servidor.";
+
+        }
+
+    }
+
+
+    function nuevoCliente() {
+
+        clienteEditandoId = null;
+
+        document.getElementById(
+            "tituloFormulario"
+        ).textContent =
+            "Nuevo cliente";
+
+        document.getElementById(
+            "clienteForm"
+        ).reset();
+
+        limpiarMensaje();
+
+        document.getElementById(
+            "formularioContainer"
+        ).style.display =
+            "block";
+
+        document.getElementById(
+            "nombre"
+        ).focus();
+
+    }
+
+
+    async function editarCliente(id) {
+
+        const token =
+            localStorage.getItem("token");
+
+        try {
+
+            const respuesta =
+                await fetch(
+                    "/api/clientes/" + id,
+                    {
+                        method: "GET",
+
+                        headers: {
+                            "Authorization":
+                                "Bearer " + token
+                        }
+                    }
+                );
+
+            if (!respuesta.ok) {
+
+                alert(
+                    "No se pudo obtener el cliente."
+                );
+
+                return;
+            }
+
+            const cliente =
+                await respuesta.json();
+
+            clienteEditandoId = id;
+
+            document.getElementById(
+                "tituloFormulario"
+            ).textContent =
+                "Editar cliente";
+
+            document.getElementById(
+                "nombre"
+            ).value =
+                cliente.nombre;
+
+            document.getElementById(
+                "documento"
+            ).value =
+                cliente.documento;
+
+            document.getElementById(
+                "telefono"
+            ).value =
+                cliente.telefono || "";
+
+            document.getElementById(
+                "correo"
+            ).value =
+                cliente.correo || "";
+
+            document.getElementById(
+                "direccion"
+            ).value =
+                cliente.direccion || "";
+
+            limpiarMensaje();
+
+            document.getElementById(
+                "formularioContainer"
+            ).style.display =
+                "block";
+
+            document.getElementById(
+                "nombre"
+            ).focus();
+
+        } catch (error) {
+
+            alert(
+                "Error al conectar con el servidor."
+            );
+
+        }
+
+    }
+
+
+    function ocultarFormulario() {
+
+        clienteEditandoId = null;
+
+        document.getElementById(
+            "formularioContainer"
+        ).style.display =
+            "none";
+
+        document.getElementById(
+            "clienteForm"
+        ).reset();
+
+        limpiarMensaje();
+
+    }
+
+
+    function limpiarMensaje() {
+
+        const mensaje =
+            document.getElementById(
+                "mensajeFormulario"
+            );
+
+        mensaje.className =
+            "mensaje-formulario";
+
+        mensaje.textContent =
+            "";
+
+    }
+
+
+    document.getElementById(
+        "clienteForm"
+    ).addEventListener(
+        "submit",
+        async function(event) {
+
+            event.preventDefault();
+
+            const token =
+                localStorage.getItem("token");
+
+            const cliente = {
+
+                nombre:
+                document.getElementById(
+                    "nombre"
+                ).value,
+
+                documento:
+                document.getElementById(
+                    "documento"
+                ).value,
+
+                telefono:
+                document.getElementById(
+                    "telefono"
+                ).value,
+
+                correo:
+                document.getElementById(
+                    "correo"
+                ).value,
+
+                direccion:
+                document.getElementById(
+                    "direccion"
+                ).value
+
+            };
+
+            const mensaje =
+                document.getElementById(
+                    "mensajeFormulario"
+                );
+
+            try {
+
+                let respuesta;
+
+                if (clienteEditandoId === null) {
+
+                    respuesta =
+                        await fetch(
+                            "/api/clientes",
+                            {
+                                method: "POST",
+
+                                headers: {
+
+                                    "Content-Type":
+                                        "application/json",
+
+                                    "Authorization":
+                                        "Bearer " + token
+
+                                },
+
+                                body:
+                                    JSON.stringify(
+                                        cliente
+                                    )
+                            }
+                        );
+
+                } else {
+
+                    respuesta =
+                        await fetch(
+                            "/api/clientes/"
+                            + clienteEditandoId,
+                            {
+                                method: "PUT",
+
+                                headers: {
+
+                                    "Content-Type":
+                                        "application/json",
+
+                                    "Authorization":
+                                        "Bearer " + token
+
+                                },
+
+                                body:
+                                    JSON.stringify(
+                                        cliente
+                                    )
+                            }
+                        );
+
+                }
+
+                const datos =
+                    await respuesta.json();
+
+                if (respuesta.ok) {
+
+                    mensaje.className =
+                        "mensaje-formulario exito";
+
+                    mensaje.textContent =
+                        clienteEditandoId === null
+                            ? "Cliente creado correctamente."
+                            : "Cliente actualizado correctamente.";
+
+                    cargarClientes();
+
+                    setTimeout(function() {
+
+                        ocultarFormulario();
+
+                    }, 1000);
+
+                } else {
+
+                    mensaje.className =
+                        "mensaje-formulario error";
+
+                    mensaje.textContent =
+                        datos.mensaje ||
+                        "No se pudo guardar el cliente.";
+
+                }
+
+            } catch (error) {
+
+                mensaje.className =
+                    "mensaje-formulario error";
+
+                mensaje.textContent =
+                    "Error al conectar con el servidor.";
+
+            }
+
+        }
+    );
+
+
+    async function eliminarCliente(id) {
+
+        const confirmar =
+            confirm(
+                "¿Estás seguro de que deseas eliminar este cliente?"
+            );
+
+        if (!confirmar) {
+            return;
+        }
+
+        const token =
+            localStorage.getItem("token");
+
+        try {
+
+            const respuesta =
+                await fetch(
+                    "/api/clientes/" + id,
+                    {
+                        method: "DELETE",
+
+                        headers: {
+                            "Authorization":
+                                "Bearer " + token
+                        }
+                    }
+                );
+
+            if (respuesta.ok) {
+
+                alert(
+                    "Cliente eliminado correctamente."
+                );
+
+                cargarClientes();
+
+            } else {
+
+                alert(
+                    "No se pudo eliminar el cliente."
+                );
+
+            }
+
+        } catch (error) {
+
+            alert(
+                "Error al conectar con el servidor."
+            );
+
+        }
+
+    }
+
+
+    cargarClientes();
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>SOFTBECX - Dashboard</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: #0b1f3a;
+            color: white;
+            padding: 25px 15px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo h1 {
+            margin: 0;
+            font-size: 28px;
+            letter-spacing: 2px;
+        }
+
+        .logo p {
+            margin: 5px 0 0;
+            color: #cbd5e1;
+            font-size: 13px;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .menu a {
+            padding: 13px 15px;
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+        }
+
+        .menu a:hover,
+        .menu a.active {
+            background: #1e3a5f;
+        }
+
+        .logout {
+            margin-top: 30px;
+            background: #7f1d1d;
+        }
+
+        .logout:hover {
+            background: #991b1b !important;
+        }
+
+        .main {
+            margin-left: 250px;
+            padding: 30px;
+        }
+
+        .topbar {
+            background: white;
+            padding: 20px 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .topbar h2 {
+            margin: 0;
+            color: #0b1f3a;
+        }
+
+        .topbar p {
+            margin: 7px 0 0;
+            color: #64748b;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .card h3 {
+            margin: 0 0 10px;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .card .number {
+            font-size: 30px;
+            font-weight: bold;
+            color: #0b1f3a;
+        }
+
+        .welcome {
+            margin-top: 25px;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .welcome h2 {
+            margin-top: 0;
+            color: #0b1f3a;
+        }
+
+        .welcome p {
+            color: #64748b;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<!-- MENÚ LATERAL -->
+
+<div class="sidebar">
+
+    <div class="logo">
+
+        <h1>SOFTBECX</h1>
+
+        <p>Sistema Administrativo</p>
+
+    </div>
+
+    <div class="menu">
+
+        <a href="/dashboard" class="active">
+            🏠 Dashboard
+        </a>
+
+        <a href="#">
+            📦 Productos / Servicios
+        </a>
+
+        <a href="#">
+            👥 Clientes
+        </a>
+
+        <a href="#">
+            🛒 Pedidos
+        </a>
+
+        <a href="#">
+            👤 Usuarios
+        </a>
+
+        <a href="#">
+            🌐 Página Web
+        </a>
+
+        <a href="#">
+            ⚙️ Configuración
+        </a>
+
+        <a href="/login" class="logout">
+            🚪 Cerrar sesión
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- CONTENIDO PRINCIPAL -->
+
+<div class="main">
+
+    <div class="topbar">
+
+        <h2>Dashboard</h2>
+
+        <p>
+            Bienvenido al sistema administrativo de SOFTBECX
+        </p>
+
+    </div>
+
+
+    <!-- TARJETAS -->
+
+    <div class="cards">
+
+        <div class="card">
+
+            <h3>Ventas</h3>
+
+            <div class="number">
+                $0
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>Clientes</h3>
+
+            <div class="number">
+                0
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>Productos</h3>
+
+            <div class="number">
+                0
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>Pedidos</h3>
+
+            <div class="number">
+                0
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- MENSAJE DE BIENVENIDA -->
+
+    <div class="welcome">
+
+        <h2>
+            ¡Bienvenido a SOFTBECX! 👋
+        </h2>
+
+        <p>
+            Desde este panel podrás administrar
+            los usuarios, productos, clientes,
+            pedidos y demás información del sistema.
+        </p>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    const usuarioGuardado =
+        localStorage.getItem("usuario");
+
+    if (usuarioGuardado) {
+
+        const usuario =
+            JSON.parse(usuarioGuardado);
+
+        const bienvenida =
+            document.querySelector(".welcome h2");
+
+        bienvenida.textContent =
+            "¡Bienvenido, " + usuario.nombre + "! 👋";
+    }
+
+</script>
+
+</body>
+
+</html>
