@@ -30,4 +30,19 @@ public class VistaController {
     public String mostrarPedidos() {
         return "pedidos";
     }
+
+    @GetMapping("/usuarios")
+    public String mostrarUsuarios() {
+        return "usuarios";
+    }
+
+    @GetMapping("/roles")
+    public String mostrarRoles() {
+        return "roles";
+    }
+
+    @GetMapping("/configuracion-web")
+    public String mostrarConfiguracionWeb() {
+        return "configuracion-web";
+    }
 }

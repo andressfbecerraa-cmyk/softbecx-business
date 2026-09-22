@@ -36,6 +36,12 @@ public class SecurityConfig {
                         .requestMatchers("/productos").permitAll()
                         .requestMatchers("/clientes").permitAll()
                         .requestMatchers("/pedidos").permitAll()
+                        .requestMatchers("/usuarios").permitAll()
+                        .requestMatchers("/roles").permitAll()
+                        .requestMatchers("/configuracion-web").permitAll()
+
+                        // Imágenes públicas
+                        .requestMatchers("/imagenes/**").permitAll()
 
                         // APIs públicas
                         .requestMatchers("/api/login").permitAll()

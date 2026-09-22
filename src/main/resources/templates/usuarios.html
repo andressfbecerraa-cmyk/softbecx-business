@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Usuarios - SoftBecX</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f9;
+            min-height: 100vh;
+        }
+
+        .contenedor {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* MENÚ */
+
+        .menu {
+            width: 230px;
+            background-color: #0b1f3a;
+            color: white;
+            padding: 25px 15px;
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 25px;
+            font-weight: bold;
+            margin-bottom: 35px;
+        }
+
+        .menu a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 13px 15px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+        }
+
+        .menu a:hover {
+            background-color: #163b68;
+        }
+
+        .menu a.activo {
+            background-color: #1d4f8c;
+        }
+
+        /* CONTENIDO */
+
+        .contenido {
+            flex: 1;
+            padding: 30px;
+        }
+
+        .encabezado {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .encabezado h1 {
+            color: #0b1f3a;
+        }
+
+        .btn-nuevo {
+            background-color: #0b1f3a;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .btn-nuevo:hover {
+            background-color: #163b68;
+        }
+
+        /* FORMULARIO */
+
+        .formulario {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .formulario h2 {
+            margin-bottom: 20px;
+            color: #0b1f3a;
+        }
+
+        .grupo {
+            margin-bottom: 15px;
+        }
+
+        .grupo label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        .grupo input,
+        .grupo select {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .botones-formulario {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-guardar {
+            background-color: #198754;
+            color: white;
+            border: none;
+            padding: 11px 18px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn-cancelar {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 11px 18px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* TABLA */
+
+        .tabla-contenedor {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 13px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #0b1f3a;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .btn-editar {
+            background-color: #0d6efd;
+            color: white;
+            border: none;
+            padding: 7px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+
+        .btn-eliminar {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 7px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .oculto {
+            display: none;
+        }
+
+        .mensaje {
+            margin-bottom: 15px;
+            padding: 12px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .mensaje.exito {
+            background-color: #d1e7dd;
+            color: #0f5132;
+        }
+
+        .mensaje.error {
+            background-color: #f8d7da;
+            color: #842029;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="contenedor">
+
+    <!-- MENÚ -->
+
+    <aside class="menu">
+
+        <div class="logo">
+            SoftBecX
+        </div>
+
+        <a href="/dashboard">
+            Dashboard
+        </a>
+
+        <a href="/productos">
+            Productos / Servicios
+        </a>
+
+        <a href="/clientes">
+            Clientes
+        </a>
+
+        <a href="/pedidos">
+            Pedidos
+        </a>
+
+        <a href="/usuarios" class="activo">
+            Usuarios
+        </a>
+
+    </aside>
+
+
+    <!-- CONTENIDO -->
+
+    <main class="contenido">
+
+        <div class="encabezado">
+
+            <h1>Gestión de Usuarios</h1>
+
+            <button
+                    class="btn-nuevo"
+                    onclick="mostrarFormularioNuevo()">
+                Nuevo usuario
+            </button>
+
+        </div>
+
+
+        <!-- MENSAJES -->
+
+        <div
+                id="mensaje"
+                class="mensaje">
+        </div>
+
+
+        <!-- FORMULARIO -->
+
+        <section
+                id="formulario"
+                class="formulario oculto">
+
+            <h2 id="tituloFormulario">
+                Nuevo usuario
+            </h2>
+
+            <input
+                    type="hidden"
+                    id="usuarioId">
+
+
+            <div class="grupo">
+
+                <label for="nombre">
+                    Nombre
+                </label>
+
+                <input
+                        type="text"
+                        id="nombre"
+                        placeholder="Nombre completo">
+
+            </div>
+
+
+            <div class="grupo">
+
+                <label for="correo">
+                    Correo
+                </label>
+
+                <input
+                        type="email"
+                        id="correo"
+                        placeholder="correo@ejemplo.com">
+
+            </div>
+
+
+            <div class="grupo">
+
+                <label for="contrasena">
+                    Contraseña
+                </label>
+
+                <input
+                        type="password"
+                        id="contrasena"
+                        placeholder="Contraseña">
+
+            </div>
+
+
+            <div class="grupo">
+
+                <label for="rol">
+                    Rol
+                </label>
+
+                <select id="rol">
+
+                    <option value="">
+                        Seleccione un rol
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="botones-formulario">
+
+                <button
+                        class="btn-guardar"
+                        onclick="guardarUsuario()">
+                    Guardar
+                </button>
+
+                <button
+                        class="btn-cancelar"
+                        onclick="cancelarFormulario()">
+                    Cancelar
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- TABLA -->
+
+        <section class="tabla-contenedor">
+
+            <table>
+
+                <thead>
+
+                <tr>
+
+                    <th>ID</th>
+
+                    <th>Nombre</th>
+
+                    <th>Correo</th>
+
+                    <th>Rol</th>
+
+                    <th>Acciones</th>
+
+                </tr>
+
+                </thead>
+
+                <tbody id="tablaUsuarios">
+
+                </tbody>
+
+            </table>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script>
+
+    let usuarios = [];
+
+    let editando = false;
+
+
+    // ==========================================
+    // OBTENER TOKEN
+    // ==========================================
+
+    function obtenerToken() {
+
+        return localStorage.getItem("token");
+
+    }
+
+
+    // ==========================================
+    // ENCABEZADOS CON TOKEN
+    // ==========================================
+
+    function obtenerHeaders() {
+
+        const token = obtenerToken();
+
+        return {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+        };
+
+    }
+
+
+    // ==========================================
+    // CARGAR USUARIOS
+    // ==========================================
+
+    async function cargarUsuarios() {
+
+        try {
+
+            const respuesta =
+                await fetch(
+                    "/api/usuarios",
+                    {
+                        method: "GET",
+                        headers: obtenerHeaders()
+                    }
+                );
+
+
+            if (respuesta.status === 401) {
+
+                mostrarMensaje(
+                    "Tu sesión no es válida. Inicia sesión nuevamente.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            if (!respuesta.ok) {
+
+                throw new Error(
+                    "No se pudieron cargar los usuarios"
+                );
+
+            }
+
+
+            usuarios =
+                await respuesta.json();
+
+
+            mostrarUsuarios();
+
+
+        } catch (error) {
+
+            mostrarMensaje(
+                error.message,
+                "error"
+            );
+
+        }
+
+    }
+
+
+    // ==========================================
+    // MOSTRAR USUARIOS
+    // ==========================================
+
+    function mostrarUsuarios() {
+
+        const tabla =
+            document.getElementById(
+                "tablaUsuarios"
+            );
+
+
+        tabla.innerHTML = "";
+
+
+        usuarios.forEach(usuario => {
+
+            const fila =
+                document.createElement("tr");
+
+
+            fila.innerHTML = `
+
+                <td>
+                    ${usuario.id}
+                </td>
+
+                <td>
+                    ${usuario.nombre}
+                </td>
+
+                <td>
+                    ${usuario.correo}
+                </td>
+
+                <td>
+                    ${
+                usuario.rol
+                    ? usuario.rol.nombre
+                    : "Sin rol"
+            }
+                </td>
+
+                <td>
+
+                    <button
+                            class="btn-editar"
+                            onclick="editarUsuario(${usuario.id})">
+                        Editar
+                    </button>
+
+                    <button
+                            class="btn-eliminar"
+                            onclick="eliminarUsuario(${usuario.id})">
+                        Eliminar
+                    </button>
+
+                </td>
+
+            `;
+
+
+            tabla.appendChild(fila);
+
+        });
+
+    }
+
+
+    // ==========================================
+    // CARGAR ROLES
+    // ==========================================
+
+    async function cargarRoles() {
+
+        try {
+
+            const respuesta =
+                await fetch(
+                    "/api/roles",
+                    {
+                        method: "GET",
+                        headers: obtenerHeaders()
+                    }
+                );
+
+
+            if (respuesta.status === 401) {
+
+                mostrarMensaje(
+                    "Tu sesión no es válida. Inicia sesión nuevamente.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            if (!respuesta.ok) {
+
+                throw new Error(
+                    "No se pudieron cargar los roles"
+                );
+
+            }
+
+
+            const roles =
+                await respuesta.json();
+
+
+            const select =
+                document.getElementById("rol");
+
+
+            select.innerHTML = `
+                <option value="">
+                    Seleccione un rol
+                </option>
+            `;
+
+
+            roles.forEach(rol => {
+
+                const opcion =
+                    document.createElement("option");
+
+
+                opcion.value =
+                    rol.id;
+
+
+                opcion.textContent =
+                    rol.nombre;
+
+
+                select.appendChild(opcion);
+
+            });
+
+
+        } catch (error) {
+
+            mostrarMensaje(
+                error.message,
+                "error"
+            );
+
+        }
+
+    }
+
+
+    // ==========================================
+    // MOSTRAR FORMULARIO NUEVO
+    // ==========================================
+
+    function mostrarFormularioNuevo() {
+
+        editando = false;
+
+
+        document.getElementById(
+            "tituloFormulario"
+        ).textContent =
+            "Nuevo usuario";
+
+
+        document.getElementById(
+            "usuarioId"
+        ).value = "";
+
+
+        document.getElementById(
+            "nombre"
+        ).value = "";
+
+
+        document.getElementById(
+            "correo"
+        ).value = "";
+
+
+        document.getElementById(
+            "contrasena"
+        ).value = "";
+
+
+        document.getElementById(
+            "rol"
+        ).value = "";
+
+
+        document.getElementById(
+            "formulario"
+        ).classList.remove("oculto");
+
+    }
+
+
+    // ==========================================
+    // EDITAR USUARIO
+    // ==========================================
+
+    function editarUsuario(id) {
+
+        const usuario =
+            usuarios.find(
+                usuario => usuario.id === id
+            );
+
+
+        if (!usuario) {
+            return;
+        }
+
+
+        editando = true;
+
+
+        document.getElementById(
+            "tituloFormulario"
+        ).textContent =
+            "Editar usuario";
+
+
+        document.getElementById(
+            "usuarioId"
+        ).value =
+            usuario.id;
+
+
+        document.getElementById(
+            "nombre"
+        ).value =
+            usuario.nombre;
+
+
+        document.getElementById(
+            "correo"
+        ).value =
+            usuario.correo;
+
+
+        document.getElementById(
+            "contrasena"
+        ).value = "";
+
+
+        document.getElementById(
+            "rol"
+        ).value =
+            usuario.rol
+                ? usuario.rol.id
+                : "";
+
+
+        document.getElementById(
+            "formulario"
+        ).classList.remove("oculto");
+
+    }
+
+
+    // ==========================================
+    // GUARDAR USUARIO
+    // ==========================================
+
+    async function guardarUsuario() {
+
+        const id =
+            document.getElementById(
+                "usuarioId"
+            ).value;
+
+
+        const nombre =
+            document.getElementById(
+                "nombre"
+            ).value.trim();
+
+
+        const correo =
+            document.getElementById(
+                "correo"
+            ).value.trim();
+
+
+        const contrasena =
+            document.getElementById(
+                "contrasena"
+            ).value;
+
+
+        const rolId =
+            document.getElementById(
+                "rol"
+            ).value;
+
+
+        if (!nombre || !correo || !rolId) {
+
+            mostrarMensaje(
+                "Completa nombre, correo y rol.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        if (!editando && !contrasena) {
+
+            mostrarMensaje(
+                "La contraseña es obligatoria para un nuevo usuario.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        const datos = {
+
+            nombre: nombre,
+
+            correo: correo,
+
+            contrasena: contrasena,
+
+            rol: {
+                id: Number(rolId)
+            }
+
+        };
+
+
+        try {
+
+            let respuesta;
+
+
+            if (editando) {
+
+                respuesta =
+                    await fetch(
+                        `/api/usuarios/${id}`,
+                        {
+                            method: "PUT",
+                            headers: obtenerHeaders(),
+                            body:
+                                JSON.stringify(datos)
+                        }
+                    );
+
+            } else {
+
+                respuesta =
+                    await fetch(
+                        "/api/usuarios",
+                        {
+                            method: "POST",
+                            headers: obtenerHeaders(),
+                            body:
+                                JSON.stringify(datos)
+                        }
+                    );
+
+            }
+
+
+            if (respuesta.status === 401) {
+
+                mostrarMensaje(
+                    "Tu sesión no es válida. Inicia sesión nuevamente.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            if (!respuesta.ok) {
+
+                throw new Error(
+                    "No se pudo guardar el usuario"
+                );
+
+            }
+
+
+            mostrarMensaje(
+                editando
+                    ? "Usuario actualizado correctamente."
+                    : "Usuario creado correctamente.",
+                "exito"
+            );
+
+
+            cancelarFormulario();
+
+
+            await cargarUsuarios();
+
+
+        } catch (error) {
+
+            mostrarMensaje(
+                error.message,
+                "error"
+            );
+
+        }
+
+    }
+
+
+    // ==========================================
+    // ELIMINAR USUARIO
+    // ==========================================
+
+    async function eliminarUsuario(id) {
+
+        const confirmar =
+            confirm(
+                "¿Seguro que deseas eliminar este usuario?"
+            );
+
+
+        if (!confirmar) {
+            return;
+        }
+
+
+        try {
+
+            const respuesta =
+                await fetch(
+                    `/api/usuarios/${id}`,
+                    {
+                        method: "DELETE",
+                        headers: obtenerHeaders()
+                    }
+                );
+
+
+            if (respuesta.status === 401) {
+
+                mostrarMensaje(
+                    "Tu sesión no es válida. Inicia sesión nuevamente.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            if (!respuesta.ok) {
+
+                throw new Error(
+                    "No se pudo eliminar el usuario"
+                );
+
+            }
+
+
+            mostrarMensaje(
+                "Usuario eliminado correctamente.",
+                "exito"
+            );
+
+
+            await cargarUsuarios();
+
+
+        } catch (error) {
+
+            mostrarMensaje(
+                error.message,
+                "error"
+            );
+
+        }
+
+    }
+
+
+    // ==========================================
+    // CANCELAR FORMULARIO
+    // ==========================================
+
+    function cancelarFormulario() {
+
+        document.getElementById(
+            "formulario"
+        ).classList.add("oculto");
+
+    }
+
+
+    // ==========================================
+    // MOSTRAR MENSAJE
+    // ==========================================
+
+    function mostrarMensaje(
+        texto,
+        tipo
+    ) {
+
+        const mensaje =
+            document.getElementById(
+                "mensaje"
+            );
+
+
+        mensaje.textContent =
+            texto;
+
+
+        mensaje.className =
+            "mensaje " + tipo;
+
+
+        mensaje.style.display =
+            "block";
+
+
+        setTimeout(() => {
+
+            mensaje.style.display =
+                "none";
+
+        }, 4000);
+
+    }
+
+
+    // ==========================================
+    // INICIAR PÁGINA
+    // ==========================================
+
+    cargarRoles();
+
+    cargarUsuarios();
+
+</script>
+
+</body>
+</html>

@@ -1,308 +1,815 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>SOFTBECX - Dashboard</title>
+    <title>SoftBecX - Dashboard</title>
 
     <style>
-
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
         }
 
         body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f1f5f9;
+            background-color: #f4f6f9;
+            color: #333;
         }
 
+        .contenedor {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* =========================
+           BARRA LATERAL
+           ========================= */
+
         .sidebar {
+            width: 250px;
+            background: #1f2937;
+            color: white;
+            padding: 25px 15px;
             position: fixed;
             left: 0;
             top: 0;
-            width: 250px;
-            height: 100vh;
-            background: #0b1f3a;
-            color: white;
-            padding: 25px 15px;
+            bottom: 0;
+            overflow-y: auto;
         }
 
-        .logo {
+        .logo-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .logo-container img {
+            width: 110px;
+            height: 110px;
+            object-fit: contain;
+            border-radius: 15px;
+            background: white;
+            padding: 8px;
+        }
+
+        .sidebar h2 {
             text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .logo h1 {
-            margin: 0;
-            font-size: 28px;
-            letter-spacing: 2px;
-        }
-
-        .logo p {
-            margin: 5px 0 0;
-            color: #cbd5e1;
-            font-size: 13px;
+            font-size: 22px;
+            margin-bottom: 30px;
+            color: white;
         }
 
         .menu {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+            list-style: none;
+        }
+
+        .menu li {
+            margin-bottom: 8px;
         }
 
         .menu a {
-            padding: 13px 15px;
-            border-radius: 8px;
+            display: block;
             color: white;
             text-decoration: none;
+            padding: 12px 15px;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .menu a:hover {
+            background: #374151;
+        }
+
+        .menu a.activo {
+            background: #2563eb;
+        }
+
+        .cerrar-sesion {
+            margin-top: 25px;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: #dc2626;
+            color: white;
+            cursor: pointer;
             font-size: 15px;
         }
 
-        .menu a:hover,
-        .menu a.active {
-            background: #1e3a5f;
+        .cerrar-sesion:hover {
+            background: #b91c1c;
         }
 
-        .logout {
-            margin-top: 30px;
-            background: #7f1d1d;
-        }
+        /* =========================
+           CONTENIDO PRINCIPAL
+           ========================= */
 
-        .logout:hover {
-            background: #991b1b !important;
-        }
-
-        .main {
+        .contenido {
             margin-left: 250px;
+            width: calc(100% - 250px);
             padding: 30px;
         }
 
-        .topbar {
-            background: white;
-            padding: 20px 25px;
-            border-radius: 12px;
-            margin-bottom: 25px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        .encabezado {
+            margin-bottom: 20px;
         }
 
-        .topbar h2 {
-            margin: 0;
-            color: #0b1f3a;
+        .encabezado h1 {
+            font-size: 30px;
+            color: #1f2937;
+            margin-bottom: 8px;
         }
 
-        .topbar p {
-            margin: 7px 0 0;
-            color: #64748b;
+        .encabezado p {
+            color: #6b7280;
+            font-size: 16px;
         }
 
-        .cards {
+        /* =========================
+           BANNER
+           ========================= */
+
+        .banner-container {
+            width: 100%;
+            height: 260px;
+            margin: 25px 0 30px 0;
+            border-radius: 15px;
+            overflow: hidden;
+            background: #e5e7eb;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .banner-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* =========================
+           TARJETAS
+           ========================= */
+
+        .tarjetas {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 20px;
+            margin-top: 20px;
         }
 
-        .card {
+        .tarjeta {
             background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .tarjeta h3 {
+            color: #6b7280;
+            font-size: 15px;
+            margin-bottom: 10px;
+        }
+
+        .tarjeta .numero {
+            font-size: 32px;
+            font-weight: bold;
+            color: #111827;
+        }
+
+        /* =========================
+           SECCIONES
+           ========================= */
+
+        .seccion {
+            background: white;
+            margin-top: 30px;
             padding: 25px;
             border-radius: 12px;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
         }
 
-        .card h3 {
-            margin: 0 0 10px;
-            color: #64748b;
-            font-size: 14px;
+        .seccion h2 {
+            margin-bottom: 15px;
+            color: #1f2937;
         }
 
-        .card .number {
-            font-size: 30px;
-            font-weight: bold;
-            color: #0b1f3a;
+        /* =========================
+           RESPONSIVE
+           ========================= */
+
+        @media (max-width: 1000px) {
+
+            .tarjetas {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
-        .welcome {
-            margin-top: 25px;
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-        }
+        @media (max-width: 700px) {
 
-        .welcome h2 {
-            margin-top: 0;
-            color: #0b1f3a;
-        }
+            .sidebar {
+                width: 200px;
+            }
 
-        .welcome p {
-            color: #64748b;
-        }
+            .contenido {
+                margin-left: 200px;
+                width: calc(100% - 200px);
+                padding: 20px;
+            }
 
+            .tarjetas {
+                grid-template-columns: 1fr;
+            }
+
+            .banner-container {
+                height: 200px;
+            }
+        }
     </style>
-
 </head>
 
 <body>
 
-<!-- MENÚ LATERAL -->
+<div class="contenedor">
 
-<div class="sidebar">
+    <!-- =========================
+         BARRA LATERAL
+         ========================= -->
 
-    <div class="logo">
+    <aside class="sidebar">
 
-        <h1>SOFTBECX</h1>
+        <div class="logo-container">
 
-        <p>Sistema Administrativo</p>
-
-    </div>
-
-    <div class="menu">
-
-        <a href="/dashboard" class="active">
-            🏠 Dashboard
-        </a>
-
-        <a href="#">
-            📦 Productos / Servicios
-        </a>
-
-        <a href="#">
-            👥 Clientes
-        </a>
-
-        <a href="#">
-            🛒 Pedidos
-        </a>
-
-        <a href="#">
-            👤 Usuarios
-        </a>
-
-        <a href="#">
-            🌐 Página Web
-        </a>
-
-        <a href="#">
-            ⚙️ Configuración
-        </a>
-
-        <a href="/login" class="logout">
-            🚪 Cerrar sesión
-        </a>
-
-    </div>
-
-</div>
-
-
-<!-- CONTENIDO PRINCIPAL -->
-
-<div class="main">
-
-    <div class="topbar">
-
-        <h2>Dashboard</h2>
-
-        <p>
-            Bienvenido al sistema administrativo de SOFTBECX
-        </p>
-
-    </div>
-
-
-    <!-- TARJETAS -->
-
-    <div class="cards">
-
-        <div class="card">
-
-            <h3>Ventas</h3>
-
-            <div class="number">
-                $0
-            </div>
+            <img
+                    id="logoEmpresa"
+                    src="/imagenes/logo.png"
+                    alt="Logo de SoftBecX"
+            >
 
         </div>
 
-
-        <div class="card">
-
-            <h3>Clientes</h3>
-
-            <div class="number">
-                0
-            </div>
-
-        </div>
-
-
-        <div class="card">
-
-            <h3>Productos</h3>
-
-            <div class="number">
-                0
-            </div>
-
-        </div>
-
-
-        <div class="card">
-
-            <h3>Pedidos</h3>
-
-            <div class="number">
-                0
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- MENSAJE DE BIENVENIDA -->
-
-    <div class="welcome">
-
-        <h2>
-            ¡Bienvenido a SOFTBECX! 👋
+        <h2 id="nombreEmpresa">
+            SoftBecX
         </h2>
 
-        <p>
-            Desde este panel podrás administrar
-            los usuarios, productos, clientes,
-            pedidos y demás información del sistema.
-        </p>
+        <ul class="menu">
 
-    </div>
+            <li>
+                <a href="/dashboard" class="activo">
+                    🏠 Dashboard
+                </a>
+            </li>
+
+            <li>
+                <a href="/productos">
+                    📦 Productos / Servicios
+                </a>
+            </li>
+
+            <li>
+                <a href="/clientes">
+                    👥 Clientes
+                </a>
+            </li>
+
+            <li>
+                <a href="/pedidos">
+                    🛒 Pedidos
+                </a>
+            </li>
+
+            <li>
+                <a href="/usuarios">
+                    👤 Usuarios
+                </a>
+            </li>
+
+            <li>
+                <a href="/roles">
+                    🔐 Roles
+                </a>
+            </li>
+
+            <li>
+                <a href="/configuracion-web">
+                    ⚙️ Configuración Web
+                </a>
+            </li>
+
+        </ul>
+
+        <button
+                class="cerrar-sesion"
+                onclick="cerrarSesion()">
+            Cerrar sesión
+        </button>
+
+    </aside>
+
+
+    <!-- =========================
+         CONTENIDO
+         ========================= -->
+
+    <main class="contenido">
+
+        <div class="encabezado">
+
+            <h1>
+                Panel de administración
+            </h1>
+
+            <p id="textoInicio">
+                Bienvenido al sistema administrativo de SoftBecX.
+            </p>
+
+        </div>
+
+
+        <!-- =========================
+             BANNER
+             ========================= -->
+
+        <div
+                class="banner-container"
+                id="bannerContainer">
+
+            <img
+                    id="bannerEmpresa"
+                    src="/imagenes/banner.jpg"
+                    alt="Banner de la empresa"
+            >
+
+        </div>
+
+
+        <!-- =========================
+             TARJETAS
+             ========================= -->
+
+        <div class="tarjetas">
+
+            <div class="tarjeta">
+
+                <h3>
+                    Clientes
+                </h3>
+
+                <div
+                        class="numero"
+                        id="totalClientes">
+                    0
+                </div>
+
+            </div>
+
+
+            <div class="tarjeta">
+
+                <h3>
+                    Productos / Servicios
+                </h3>
+
+                <div
+                        class="numero"
+                        id="totalProductos">
+                    0
+                </div>
+
+            </div>
+
+
+            <div class="tarjeta">
+
+                <h3>
+                    Pedidos
+                </h3>
+
+                <div
+                        class="numero"
+                        id="totalPedidos">
+                    0
+                </div>
+
+            </div>
+
+
+            <div class="tarjeta">
+
+                <h3>
+                    Usuarios
+                </h3>
+
+                <div
+                        class="numero"
+                        id="totalUsuarios">
+                    0
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             INFORMACIÓN
+             ========================= -->
+
+        <div class="seccion">
+
+            <h2>
+                Información de la empresa
+            </h2>
+
+            <p id="descripcionEmpresa">
+                Sistema administrativo SoftBecX.
+            </p>
+
+        </div>
+
+    </main>
 
 </div>
 
 
 <script>
 
-    const usuarioGuardado =
-        localStorage.getItem("usuario");
+    /* ==========================================
+       TOKEN
+       ========================================== */
 
-    if (usuarioGuardado) {
+    const token = localStorage.getItem("token");
 
-        const usuario =
-            JSON.parse(usuarioGuardado);
 
-        const bienvenida =
-            document.querySelector(".welcome h2");
+    /* ==========================================
+       CONFIGURACIÓN WEB
+       ========================================== */
 
-        bienvenida.textContent =
-            "¡Bienvenido, " + usuario.nombre + "! 👋";
+    async function cargarConfiguracion() {
+
+        try {
+
+            const respuesta = await fetch(
+                "/api/configuracion-web",
+                {
+                    method: "GET",
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    }
+                }
+            );
+
+
+            if (!respuesta.ok) {
+
+                console.log(
+                    "No se pudo cargar la configuración web."
+                );
+
+                return;
+            }
+
+
+            const configuraciones =
+                await respuesta.json();
+
+
+            if (
+                !configuraciones ||
+                configuraciones.length === 0
+            ) {
+
+                return;
+            }
+
+
+            const configuracion =
+                configuraciones[
+                configuraciones.length - 1
+                    ];
+
+
+            /* Nombre de empresa */
+
+            if (configuracion.nombreEmpresa) {
+
+                document.getElementById(
+                    "nombreEmpresa"
+                ).textContent =
+                    configuracion.nombreEmpresa;
+
+                document.title =
+                    configuracion.nombreEmpresa +
+                    " - Dashboard";
+            }
+
+
+            /* Texto de inicio */
+
+            if (configuracion.textoInicio) {
+
+                document.getElementById(
+                    "textoInicio"
+                ).textContent =
+                    configuracion.textoInicio;
+            }
+
+
+            /* Descripción */
+
+            if (configuracion.descripcion) {
+
+                document.getElementById(
+                    "descripcionEmpresa"
+                ).textContent =
+                    configuracion.descripcion;
+            }
+
+
+            /* ==================================
+               LOGO LOCAL
+               ================================== */
+
+            const logo =
+                document.getElementById(
+                    "logoEmpresa"
+                );
+
+            logo.src =
+                "/imagenes/logo.png";
+
+            logo.style.display =
+                "block";
+
+
+            /* ==================================
+               BANNER LOCAL
+               ================================== */
+
+            const banner =
+                document.getElementById(
+                    "bannerEmpresa"
+                );
+
+            const contenedorBanner =
+                document.getElementById(
+                    "bannerContainer"
+                );
+
+
+            banner.src =
+                "/imagenes/banner.jpg";
+
+
+            contenedorBanner.style.display =
+                "block";
+
+        } catch (error) {
+
+            console.error(
+                "Error cargando configuración:",
+                error
+            );
+
+        }
+
     }
+
+
+    /* ==========================================
+       CLIENTES
+       ========================================== */
+
+    async function cargarClientes() {
+
+        try {
+
+            const respuesta = await fetch(
+                "/api/clientes",
+                {
+                    headers: {
+                        "Authorization":
+                            "Bearer " + token
+                    }
+                }
+            );
+
+
+            if (!respuesta.ok) {
+                return;
+            }
+
+
+            const clientes =
+                await respuesta.json();
+
+
+            document.getElementById(
+                "totalClientes"
+            ).textContent =
+                clientes.length;
+
+        } catch (error) {
+
+            console.error(
+                "Error cargando clientes:",
+                error
+            );
+
+        }
+
+    }
+
+
+    /* ==========================================
+       PRODUCTOS
+       ========================================== */
+
+    async function cargarProductos() {
+
+        try {
+
+            const respuesta = await fetch(
+                "/api/productos",
+                {
+                    headers: {
+                        "Authorization":
+                            "Bearer " + token
+                    }
+                }
+            );
+
+
+            if (!respuesta.ok) {
+                return;
+            }
+
+
+            const productos =
+                await respuesta.json();
+
+
+            document.getElementById(
+                "totalProductos"
+            ).textContent =
+                productos.length;
+
+        } catch (error) {
+
+            console.error(
+                "Error cargando productos:",
+                error
+            );
+
+        }
+
+    }
+
+
+    /* ==========================================
+       PEDIDOS
+       ========================================== */
+
+    async function cargarPedidos() {
+
+        try {
+
+            const respuesta = await fetch(
+                "/api/pedidos",
+                {
+                    headers: {
+                        "Authorization":
+                            "Bearer " + token
+                    }
+                }
+            );
+
+
+            if (!respuesta.ok) {
+                return;
+            }
+
+
+            const pedidos =
+                await respuesta.json();
+
+
+            document.getElementById(
+                "totalPedidos"
+            ).textContent =
+                pedidos.length;
+
+        } catch (error) {
+
+            console.error(
+                "Error cargando pedidos:",
+                error
+            );
+
+        }
+
+    }
+
+
+    /* ==========================================
+       USUARIOS
+       ========================================== */
+
+    async function cargarUsuarios() {
+
+        try {
+
+            const respuesta = await fetch(
+                "/api/usuarios",
+                {
+                    headers: {
+                        "Authorization":
+                            "Bearer " + token
+                    }
+                }
+            );
+
+
+            if (!respuesta.ok) {
+                return;
+            }
+
+
+            const usuarios =
+                await respuesta.json();
+
+
+            document.getElementById(
+                "totalUsuarios"
+            ).textContent =
+                usuarios.length;
+
+        } catch (error) {
+
+            console.error(
+                "Error cargando usuarios:",
+                error
+            );
+
+        }
+
+    }
+
+
+    /* ==========================================
+       CERRAR SESIÓN
+       ========================================== */
+
+    async function cerrarSesion() {
+
+        try {
+
+            await fetch(
+                "/api/logout",
+                {
+                    method: "POST",
+                    headers: {
+                        "Authorization":
+                            "Bearer " + token
+                    }
+                }
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Error cerrando sesión:",
+                error
+            );
+
+        }
+
+
+        localStorage.removeItem("token");
+
+        window.location.href =
+            "/login";
+    }
+
+
+    /* ==========================================
+       INICIO
+       ========================================== */
+
+    cargarConfiguracion();
+
+    cargarClientes();
+
+    cargarProductos();
+
+    cargarPedidos();
+
+    cargarUsuarios();
 
 </script>
 
 </body>
-
 </html>

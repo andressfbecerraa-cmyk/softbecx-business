@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Roles - SoftBecX</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+        }
+
+        .contenedor {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* MENÚ LATERAL */
+        .sidebar {
+            width: 240px;
+            background-color: #1f2937;
+            color: white;
+            padding: 20px;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+        }
+
+        .sidebar a:hover {
+            background-color: #374151;
+        }
+
+        /* CONTENIDO */
+        .contenido {
+            flex: 1;
+            padding: 30px;
+        }
+
+        h1 {
+            margin-top: 0;
+            color: #1f2937;
+        }
+
+        .tarjeta {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        /* FORMULARIO */
+        .formulario {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .formulario input {
+            flex: 1;
+            min-width: 250px;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        button {
+            border: none;
+            padding: 12px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            color: white;
+            font-weight: bold;
+        }
+
+        .btn-guardar {
+            background-color: #2563eb;
+        }
+
+        .btn-guardar:hover {
+            background-color: #1d4ed8;
+        }
+
+        .btn-editar {
+            background-color: #f59e0b;
+            margin-right: 5px;
+        }
+
+        .btn-eliminar {
+            background-color: #dc2626;
+        }
+
+        .btn-editar:hover {
+            background-color: #d97706;
+        }
+
+        .btn-eliminar:hover {
+            background-color: #b91c1c;
+        }
+
+        /* TABLA */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #1f2937;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f9fafb;
+        }
+
+        .mensaje {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="contenedor">
+
+    <!-- MENÚ -->
+    <aside class="sidebar">
+
+        <h2>SoftBecX</h2>
+
+        <a href="/dashboard">📊 Dashboard</a>
+        <a href="/productos">📦 Productos/Servicios</a>
+        <a href="/clientes">👥 Clientes</a>
+        <a href="/pedidos">🛒 Pedidos</a>
+        <a href="/usuarios">👤 Usuarios</a>
+        <a href="/roles">🔐 Roles</a>
+
+    </aside>
+
+    <!-- CONTENIDO -->
+    <main class="contenido">
+
+        <h1>Gestión de Roles</h1>
+
+        <!-- FORMULARIO -->
+        <div class="tarjeta">
+
+            <h2>Crear / Editar Rol</h2>
+
+            <div class="formulario">
+
+                <input
+                        type="text"
+                        id="nombreRol"
+                        placeholder="Nombre del rol"
+                >
+
+                <button
+                        class="btn-guardar"
+                        onclick="guardarRol()"
+                >
+                    Guardar Rol
+                </button>
+
+            </div>
+
+            <div
+                    id="mensaje"
+                    class="mensaje"
+            ></div>
+
+        </div>
+
+        <!-- TABLA -->
+        <div class="tarjeta">
+
+            <h2>Roles registrados</h2>
+
+            <table>
+
+                <thead>
+
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Acciones</th>
+                </tr>
+
+                </thead>
+
+                <tbody id="tablaRoles">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </main>
+
+</div>
+
+<script>
+
+    let rolEditando = null;
+
+    const token = localStorage.getItem("token");
+
+    // CARGAR ROLES
+    async function cargarRoles() {
+
+        try {
+
+            const respuesta = await fetch("/api/roles", {
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            });
+
+            if (!respuesta.ok) {
+
+                if (respuesta.status === 401) {
+                    alert("Tu sesión ha expirado. Inicia sesión nuevamente.");
+                    window.location.href = "/login";
+                    return;
+                }
+
+                throw new Error("Error al cargar los roles");
+            }
+
+            const roles = await respuesta.json();
+
+            const tabla = document.getElementById("tablaRoles");
+
+            tabla.innerHTML = "";
+
+            roles.forEach(rol => {
+
+                const fila = document.createElement("tr");
+
+                fila.innerHTML = `
+                    <td>${rol.id}</td>
+
+                    <td>${rol.nombre}</td>
+
+                    <td>
+
+                        <button
+                                class="btn-editar"
+                                onclick="editarRol(${rol.id}, '${rol.nombre}')"
+                        >
+                            Editar
+                        </button>
+
+                        <button
+                                class="btn-eliminar"
+                                onclick="eliminarRol(${rol.id})"
+                        >
+                            Eliminar
+                        </button>
+
+                    </td>
+                `;
+
+                tabla.appendChild(fila);
+
+            });
+
+        } catch (error) {
+
+            console.error(error);
+
+            document.getElementById("mensaje").textContent =
+                "No se pudieron cargar los roles.";
+
+        }
+
+    }
+
+
+    // GUARDAR ROL
+    async function guardarRol() {
+
+        const nombre = document
+            .getElementById("nombreRol")
+            .value
+            .trim();
+
+        if (nombre === "") {
+
+            alert("Escribe el nombre del rol.");
+
+            return;
+        }
+
+        try {
+
+            let respuesta;
+
+            if (rolEditando === null) {
+
+                // CREAR
+                respuesta = await fetch("/api/roles", {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + token
+                    },
+
+                    body: JSON.stringify({
+                        nombre: nombre
+                    })
+
+                });
+
+            } else {
+
+                // EDITAR
+                respuesta = await fetch(
+                    "/api/roles/" + rolEditando,
+                    {
+
+                        method: "PUT",
+
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": "Bearer " + token
+                        },
+
+                        body: JSON.stringify({
+                            nombre: nombre
+                        })
+
+                    }
+                );
+
+            }
+
+            if (!respuesta.ok) {
+
+                alert("No se pudo guardar el rol.");
+
+                return;
+            }
+
+            document.getElementById("nombreRol").value = "";
+
+            rolEditando = null;
+
+            document.querySelector(".btn-guardar").textContent =
+                "Guardar Rol";
+
+            document.getElementById("mensaje").textContent =
+                "Rol guardado correctamente.";
+
+            cargarRoles();
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert("Ocurrió un error al guardar el rol.");
+
+        }
+
+    }
+
+
+    // EDITAR ROL
+    function editarRol(id, nombre) {
+
+        rolEditando = id;
+
+        document.getElementById("nombreRol").value = nombre;
+
+        document.querySelector(".btn-guardar").textContent =
+            "Actualizar Rol";
+
+        document.getElementById("nombreRol").focus();
+
+    }
+
+
+    // ELIMINAR ROL
+    async function eliminarRol(id) {
+
+        const confirmar = confirm(
+            "¿Seguro que deseas eliminar este rol?"
+        );
+
+        if (!confirmar) {
+            return;
+        }
+
+        try {
+
+            const respuesta = await fetch(
+                "/api/roles/" + id,
+                {
+
+                    method: "DELETE",
+
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    }
+
+                }
+            );
+
+            if (!respuesta.ok) {
+
+                alert("No se pudo eliminar el rol.");
+
+                return;
+            }
+
+            alert("Rol eliminado correctamente.");
+
+            cargarRoles();
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert("Ocurrió un error al eliminar el rol.");
+
+        }
+
+    }
+
+
+    // CARGAR AL ABRIR LA PÁGINA
+    cargarRoles();
+
+</script>
+
+</body>
+</html>
